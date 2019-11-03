@@ -1,0 +1,16 @@
+main: fr.fingarde.atharion.survie.Main
+name: Atharion
+version: 0.0.1
+author: Fingarde
+api-version: 1.13
+commands:
+  fly:
+    description: Fly
+  nick:
+    description: nick
+  prefix:
+    description: prefix
+  speed:
+    description: speed
+  suffix:
+    description: suffix
