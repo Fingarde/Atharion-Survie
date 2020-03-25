@@ -3,11 +3,12 @@ package fr.fingarde.atharion.survie;
 import com.zaxxer.hikari.HikariDataSource;
 import fr.fingarde.atharion.survie.commands.*;
 import fr.fingarde.atharion.survie.listeners.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class Main extends JavaPlugin {
 
@@ -37,6 +39,8 @@ public class Main extends JavaPlugin {
 
         registerEvents();
         registerCommands();
+
+        addCrafts();
 
         updateGameTime();
         refreshTPS();
@@ -65,6 +69,10 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TimberListener(), this);
         getServer().getPluginManager().registerEvents(new ConnectionListerner(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        getServer().getPluginManager().registerEvents(new BucketListener(), this);
+        getServer().getPluginManager().registerEvents(new HammerListener(), this);
+        getServer().getPluginManager().registerEvents(new VillagerFeedListener(), this);
+        getServer().getPluginManager().registerEvents(new Explosionlistener(), this);
     }
 
     private void connectDatabase()
@@ -93,6 +101,61 @@ public class Main extends JavaPlugin {
         hikari.setIdleTimeout(300);
     }
 
+    private void addCrafts() {
+        ItemStack diamondHammer = new ItemStack(Material.DIAMOND_PICKAXE);
+        ItemMeta diamondHammerMeta = diamondHammer.getItemMeta();
+        diamondHammerMeta.setDisplayName("§rDiamond Hammer");
+        diamondHammerMeta.setLocalizedName("diamond_hammer");
+        ArrayList<String> diamondHammerLore = new ArrayList<>();
+        diamondHammerLore.add("");
+        diamondHammerLore.add("§rDurability: §e" + "1651" + "§r/§e" + "1651");
+        diamondHammerMeta.setCustomModelData(10001001);
+        diamondHammerMeta.setLore(diamondHammerLore);
+        diamondHammer.setItemMeta(diamondHammerMeta);
+        ShapedRecipe diamondHammerRecipe = new ShapedRecipe( new NamespacedKey(this, "diamond_hammer"), diamondHammer);
+        diamondHammerRecipe.shape("***","?#?"," % ");
+        diamondHammerRecipe.setIngredient('%', Material.BLAZE_ROD);
+        diamondHammerRecipe.setIngredient('?', Material.DIAMOND);
+        diamondHammerRecipe.setIngredient('*', Material.DIAMOND_PICKAXE);
+        diamondHammerRecipe.setIngredient('#', Material.DIAMOND_BLOCK);
+        getServer().addRecipe(diamondHammerRecipe);
+
+        ItemStack diamondExcavator = new ItemStack(Material.DIAMOND_SHOVEL);
+        ItemMeta diamondExcavatorMeta = diamondExcavator.getItemMeta();
+        diamondExcavatorMeta.setDisplayName("§rDiamond Excavator");
+        diamondExcavatorMeta.setLocalizedName("diamond_excavator");
+        ArrayList<String> diamondExcavatorLore = new ArrayList<>();
+        diamondExcavatorLore.add("");
+        diamondExcavatorLore.add("§rDurability: §e" + "1651" + "§r/§e" + "1651");
+        diamondExcavatorMeta.setCustomModelData(10001011);
+        diamondExcavatorMeta.setLore(diamondExcavatorLore);
+        diamondExcavator.setItemMeta(diamondExcavatorMeta);
+        ShapedRecipe diamondExcavatorRecipe = new ShapedRecipe( new NamespacedKey(this, "diamond_excavator"), diamondExcavator);
+        diamondExcavatorRecipe.shape("***","?#?"," % ");
+        diamondExcavatorRecipe.setIngredient('%', Material.BLAZE_ROD);
+        diamondExcavatorRecipe.setIngredient('?', Material.DIAMOND);
+        diamondExcavatorRecipe.setIngredient('*', Material.DIAMOND_SHOVEL);
+        diamondExcavatorRecipe.setIngredient('#', Material.DIAMOND_BLOCK);
+        getServer().addRecipe(diamondExcavatorRecipe);
+
+        ItemStack extraBucked = new ItemStack(Material.BUCKET);
+        ItemMeta extraBuckedMeta = extraBucked.getItemMeta();
+        extraBuckedMeta.setDisplayName("§rExtra Bucked");
+        extraBuckedMeta.setLocalizedName("extra_bucket");
+        ArrayList<String> extraBuckedLore = new ArrayList<>();
+        extraBuckedLore.add("");
+        extraBuckedLore.add("§rMode: §e" + "3x3x3");
+        extraBuckedMeta.setLore(extraBuckedLore);
+        extraBuckedMeta.setCustomModelData(10030001);
+
+        extraBucked.setItemMeta(extraBuckedMeta);
+
+        ShapedRecipe extraBuckedRecipe = new ShapedRecipe( new NamespacedKey(this, "extra_bukket"), extraBucked);
+        extraBuckedRecipe.shape("* *", " * ");
+        extraBuckedRecipe.setIngredient('*', Material.DIAMOND_BLOCK);
+
+        getServer().addRecipe(extraBuckedRecipe);
+    }
     private void createTables()
     {
         try
